@@ -20,27 +20,6 @@ jobs:
       - name: Clone repository
         uses: actions/checkout@v4
       
-      #- name: Cache docker registry
-      #  uses: actions/cache@v4
-      #  with:
-      #    key: registry-${{ github.sha }}
-      #    path: ${{ runner.temp }}/registry
-
-      #- name: Cache Docker layers
-      #  uses: actions/cache@v4
-      #  with:
-      #    path: /tmp/.buildx-cache
-      #    # Key is named differently to avoid collision
-      #    key: ${{ runner.os }}-multi-buildx-${{ github.sha }}
-      #    restore-keys: |
-      #      ${{ runner.os }}-multi-buildx
-
-      #- name: Start local Docker registry
-      #  run: |
-      #    # Docker save / load does not support multi-arch images.
-      #    # This sets up a local registry that I can push the images to.
-      #    docker run -d -p 5000:5000 -e 'REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY=/var/lib/registry' -v '${{ runner.temp }}/registry:/var/lib/registry' registry:2
-
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
@@ -70,10 +49,6 @@ jobs:
           name: myimage
           path: /tmp/docker_intermediate.tar
 
-      #- name: Build image 2
-      #  run: |
-      #    docker buildx build -f bin.dockerfile --provenance=false --platform=linux/amd64,linux/arm64 -t localhost:5000/bin --push .
-
   build:
     needs: build-bin
     name: ${{ matrix.kind }}
@@ -97,28 +72,6 @@ jobs:
 
       - name: Clone repository
         uses: actions/checkout@v4
-      
-      #- name: Cache docker registry
-      #  uses: actions/cache@v4
-      #  with:
-      #    key: registry-${{ github.sha }}
-      #    fail-on-cache-miss: true
-      #    path: ${{ runner.temp }}/registry
-
-      #- name: Cache Docker layers
-      #  uses: actions/cache@v4
-      #  with:
-      #    path: /tmp/.buildx-cache
-      #    # Key is named differently to avoid collision
-      #    key: ${{ runner.os }}-multi-buildx-${{ github.sha }}
-      #    restore-keys: |
-      #      ${{ runner.os }}-multi-buildx
-
-      #- name: Start local Docker registry
-      #  run: |
-      #    # Docker save / load does not support multi-arch images.
-      #    # This sets up a local registry that I can push the images to.
-      #    docker run -d -p 5000:5000 -e 'REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY=/var/lib/registry' -v '${{ runner.temp }}/registry:/var/lib/registry' registry:2
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
